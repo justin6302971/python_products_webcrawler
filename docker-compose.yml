@@ -1,0 +1,21 @@
+# canonical configuration
+version: "3.7"
+
+services:
+    productsjob:
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
+        image: product_webcrawler_job_${ENV_TYPE}:dev
+        container_name: product_webcrawler_job_${ENV_TYPE}
+        networks:
+            - linenotify-nw
+
+networks:
+    linenotify-nw:
+        name: linenotify-nw
+        external: true
+          
+
+        
+  

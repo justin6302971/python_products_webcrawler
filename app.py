@@ -9,17 +9,19 @@ from datetime import datetime
 import requests
 from os import environ
 
-def test():
-    print("Testing")
-    print(f"LOGIN_URL:{LOGIN_URL}")
-
-    
-
+# def test():
+#     print("Testing")
+#     print(f"LOGIN_URL:{LOGIN_URL}")
 
 def upsert_product_job():
     print("start collecting product")
     latest_product_info_list = collect_product(
         HERMES_BAGS_AND_SMALL_LEATHER_GOODS_URL)
+
+    if len(latest_product_info_list) == 0:
+        print("retrieve product error")
+        return
+
 
     # print(latest_product_info)
 
@@ -84,7 +86,7 @@ def upsert_product_job():
 
 
 def check_latest_products():
-    print("start query new product")
+    print("start checking new product")
     new_product_entity_list = session.query(Product).filter(
         Product.status == True, Product.is_new_item == True).all()
     if len(new_product_entity_list) > 0:
@@ -133,13 +135,14 @@ def check_latest_products():
     print('done checking product item')
 
 
+# schedule.every(2).seconds.do(test)
 
-schedule.every(10).seconds.do(test)
+# upsert_product_job()
+# check_latest_products()
 
+schedule.every(1).minutes.do(upsert_product_job)
 
-# schedule.every(1).minutes.do(upsert_product_job)
-
-# schedule.every(30).seconds.do(check_latest_products)
+schedule.every(30).seconds.do(check_latest_products)
 
 
 # schedule.every(10).minutes.do(job)

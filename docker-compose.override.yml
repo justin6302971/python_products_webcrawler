@@ -1,0 +1,15 @@
+# dev configuration (use docker-compose up will use docker-compose.yml and docker-comspoe.override.yml both)
+# os: mac
+version: "3.7"
+
+services:
+    productsjob:
+        env_file: .docker.env
+        restart: always
+        volumes:
+            - products-webcrawler-v:/product_webcrawler_job
+   
+volumes:
+    products-webcrawler-v:
+        name: products-webcrawler-v
+

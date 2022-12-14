@@ -26,7 +26,12 @@ def collect_product(url):
             product_meta["description"] = product_desc
 
             products.append(product_meta)
-        except TypeError:
+        except TypeError as tex:
+            print(f'collect_product, type error:{str(tex)}')
+            continue
+        except Exception as ex:
+            print(f'collect_product, error:{str(ex)}')
+
             continue
 
     return products
