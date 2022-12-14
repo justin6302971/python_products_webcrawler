@@ -62,7 +62,7 @@ def upsert_product_job():
         item for item in current_product_entity_list if item.code in intersection_product_code_list]
     if len(intersection_product_entity_list) > 0:
         for item in intersection_product_entity_list:
-            if item.notify_counts > 3 and item.status == True and item.is_new_item ==True:
+            if item.notify_counts >= 3 and item.status == True and item.is_new_item ==True:
                 item.is_new_item = False
                 item.modified_dt = datetime.now()
         session.commit()
