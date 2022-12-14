@@ -1,0 +1,1 @@
+HERMES_BAGS_AND_SMALL_LEATHER_GOODS_URL= "https://www.hermes.com/tw/zh/category/women/bags-and-small-leather-goods/bags-and-clutches/#|"
