@@ -19,20 +19,13 @@ def upsert_product_job():
         HERMES_BAGS_AND_SMALL_LEATHER_GOODS_URL)
 
     if len(latest_product_info_list) == 0:
-        print("retrieve product error")
+        print("got error when collecting product ")
         return
 
+    print("done collecting product")
 
-    # print(latest_product_info)
 
-    print("start upserting product")
-
-    # for item in latest_product_info:
-    #     product_entity = Product(
-    #         code=item["code"], description=item["description"], created_dt=datetime.now())
-    #     session.add(product_entity)
-
-    # session.commit()
+    print('start processing product item')
 
     current_product_entity_list = session.query(
         Product).filter(Product.status == True).all()
@@ -54,7 +47,6 @@ def upsert_product_job():
             new_product_entity = Product(
                 code=item["code"], description=item["description"], created_dt=datetime.now())
             session.add(new_product_entity)
-
         session.commit()
 
     offline_product_info_list = [
@@ -64,23 +56,16 @@ def upsert_product_job():
         for item in offline_product_info_list:
             item.status = False
             item.modified_dt = datetime.now()
-
         session.commit()
 
     intersection_product_entity_list = [
         item for item in current_product_entity_list if item.code in intersection_product_code_list]
     if len(intersection_product_entity_list) > 0:
         for item in intersection_product_entity_list:
-            if item.notify_counts >= 3 and item.status == True and item.is_new_item ==True:
+            if item.notify_counts > 3 and item.status == True and item.is_new_item ==True:
                 item.is_new_item = False
                 item.modified_dt = datetime.now()
-
         session.commit()
-    # print(len(intersection_product_info_list))
-
-    # print(len(new_product_info_list))
-
-    # print(len(offline_product_info_list))
 
     print('done processing product item')
 
@@ -88,16 +73,16 @@ def upsert_product_job():
 def check_latest_products():
     print("start checking new product")
     new_product_entity_list = session.query(Product).filter(
-        Product.status == True, Product.is_new_item == True).all()
+        Product.status == True, Product.is_new_item == True, Product.notify_counts<3).all()
     if len(new_product_entity_list) > 0:
         # process message
 
         now = datetime.now()
         formatted_now = now.strftime("%Y-%m-%d %H:%M:%S")
         product_msg_list = [
-            f'[{item.description}]' for item in new_product_entity_list]
-        product_msg = ", ".join(product_msg_list)
-        message = f'got these new products today at {formatted_now}:{product_msg}'
+            f'{idx}. {item.description}' for idx,item in   enumerate(new_product_entity_list, start=1)]
+        product_msg = "\n".join(product_msg_list)
+        message = f'got these new products today at {formatted_now}:\n\nproducts:\n{product_msg}\n\nwebsite_url:\n{HERMES_BAGS_AND_SMALL_LEATHER_GOODS_URL}'
 
         email = environ.get("SENDER_EMAIL")
         password = environ.get("SENDER_PASSWORD")
@@ -127,6 +112,8 @@ def check_latest_products():
             MESSAGE_URL, headers={'Authorization': token_params}, json=body)
         message_resonpse_result = message_resonpse.json()
 
+        print(f"send message result: {message_resonpse_result}")
+
         if message_resonpse_result["isSuccess"] == True:
             for item in new_product_entity_list:
                 item.notify_counts = item.notify_counts+1
@@ -134,23 +121,15 @@ def check_latest_products():
 
     print('done checking product item')
 
-
-# schedule.every(2).seconds.do(test)
-
 # upsert_product_job()
 # check_latest_products()
 
+formatted_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+print(f"start products web crawler job at {formatted_now}")
 schedule.every(1).minutes.do(upsert_product_job)
 
 schedule.every(30).seconds.do(check_latest_products)
 
-
-# schedule.every(10).minutes.do(job)
-# schedule.every().hour.do(job)
-# schedule.every().day.at("10:30").do(job)
-# schedule.every().monday.do(job)
-# schedule.every().wednesday.at("13:15").do(job)
-# schedule.every().minute.at(":17").do(job)
 
 while True:
     schedule.run_pending()

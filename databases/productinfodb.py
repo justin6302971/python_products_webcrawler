@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import DeclarativeMeta
 from datetime import datetime
 
 sqlalchemy_database_uri = environ.get('SQLALCHEMY_DATABASE_URI')
-engine = create_engine(sqlalchemy_database_uri, echo=True, future=True)
+engine = create_engine(sqlalchemy_database_uri, echo=False, future=True)
 
 Session = sessionmaker(bind=engine)
 

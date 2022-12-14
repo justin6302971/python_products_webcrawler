@@ -9,6 +9,7 @@ def set_header_user_agent():
 
 def collect_product(url):
     user_agent = set_header_user_agent()
+    print(f"collect_product,agent: {user_agent}")
     response = requests.get(url, headers={'user-agent': user_agent})
 
     soup = BeautifulSoup(response.content, 'html5lib')
@@ -22,7 +23,7 @@ def collect_product(url):
         product_meta = {}
         try:
             product_meta["code"] = item['id']
-            product_desc = "".join(item.text.split())
+            product_desc = " ".join(item.text.split())
             product_meta["description"] = product_desc
 
             products.append(product_meta)
@@ -31,7 +32,8 @@ def collect_product(url):
             continue
         except Exception as ex:
             print(f'collect_product, error:{str(ex)}')
-
             continue
+
+    print(f"collect_product, product counts: {len(products)}")
 
     return products
