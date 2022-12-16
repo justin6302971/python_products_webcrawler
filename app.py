@@ -6,12 +6,9 @@ from constants.crawler_url import HERMES_BAGS_AND_SMALL_LEATHER_GOODS_URL
 from constants.linenotify_url import LOGIN_URL, MESSAGE_URL
 from databases.productinfodb import Product, session
 from datetime import datetime
-import requests
+import requests,random
 from os import environ
 
-# def test():
-#     print("Testing")
-#     print(f"LOGIN_URL:{LOGIN_URL}")
 
 def upsert_product_job():
     print("start collecting product")
@@ -23,7 +20,6 @@ def upsert_product_job():
         return
 
     print("done collecting product")
-
 
     print('start processing product item')
 
@@ -62,7 +58,7 @@ def upsert_product_job():
         item for item in current_product_entity_list if item.code in intersection_product_code_list]
     if len(intersection_product_entity_list) > 0:
         for item in intersection_product_entity_list:
-            if item.notify_counts >= 3 and item.status == True and item.is_new_item ==True:
+            if item.notify_counts >= 3 and item.status == True and item.is_new_item == True:
                 item.is_new_item = False
                 item.modified_dt = datetime.now()
         session.commit()
@@ -73,14 +69,14 @@ def upsert_product_job():
 def check_latest_products():
     print("start checking new product")
     new_product_entity_list = session.query(Product).filter(
-        Product.status == True, Product.is_new_item == True, Product.notify_counts<3).all()
+        Product.status == True, Product.is_new_item == True, Product.notify_counts < 3).all()
     if len(new_product_entity_list) > 0:
         # process message
 
         now = datetime.now()
         formatted_now = now.strftime("%Y-%m-%d %H:%M:%S")
         product_msg_list = [
-            f'{idx}. {item.description}' for idx,item in   enumerate(new_product_entity_list, start=1)]
+            f'{idx}. {item.description}' for idx, item in enumerate(new_product_entity_list, start=1)]
         product_msg = "\n".join(product_msg_list)
         message = f'got these new products today at {formatted_now}:\n\nproducts:\n{product_msg}\n\nwebsite_url:\n{HERMES_BAGS_AND_SMALL_LEATHER_GOODS_URL}'
 
@@ -124,10 +120,20 @@ def check_latest_products():
 # upsert_product_job()
 # check_latest_products()
 
+# def test():
+#     latest_product_info_list = collect_product(
+#         HERMES_BAGS_AND_SMALL_LEATHER_GOODS_URL)
+#     print(latest_product_info_list)
+
+# schedule.every(10).seconds.do(test)
+
+
+
+
 formatted_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 print(f"start products web crawler job at {formatted_now}")
-schedule.every(1).minutes.do(upsert_product_job)
 
+schedule.every(1).minutes.do(upsert_product_job)
 schedule.every(30).seconds.do(check_latest_products)
 
 

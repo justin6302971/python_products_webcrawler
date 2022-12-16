@@ -5,3 +5,4 @@ schedule==1.1.0
 fake_useragent==1.1.1
 SQLAlchemy==1.4.44
 psycopg2-binary==2.9.5
+py-mini-racer-0.6.0

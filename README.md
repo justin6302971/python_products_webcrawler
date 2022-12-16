@@ -40,3 +40,4 @@ pip install -r requirements.txt
 3. [web crawler tutorial 2](https://brightdata.com/blog/how-tos/how-to-use-beautiful-soup-for-web-scraping-with-python?kw=&cpn=18020763274&cam=aw_proxy-pmax_en___&utm_matchtype=&cq_src=google_ads&cq_cmp=18020763274&cq_term=&cq_plac=&cq_net=x&cq_plt=gp&utm_term=&utm_campaign=proxy-pmax_en&utm_source=adwords&utm_medium=ppc&utm_content=&hsa_acc=1393175403&hsa_cam=18020763274&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gclid=Cj0KCQiA7bucBhCeARIsAIOwr-85cXyhZQmiaj6xAJSqNTOFPV3n6FnJ9ml6aroCpug2W1Dm2HfEMkMaAirYEALw_wcB)
 4. [python datetime](https://www.freecodecamp.org/news/python-datetime-now-how-to-get-todays-date-and-time/)
 5. [schedule python scripts method](https://nschdr.medium.com/running-scheduled-python-tasks-in-a-docker-container-bf9ea2e8a66c)
+6. [proxynova](https://www.proxynova.com/proxy-server-list/country-tw/)
