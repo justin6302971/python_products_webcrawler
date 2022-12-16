@@ -40,34 +40,43 @@ def collect_product(url):
     try:
         response = requests.get(
             url, headers={'user-agent': user_agent}, proxies=proxy, timeout=5)
-        print(f'use useragent and proxy to get product data')
+        print(f'collect_product, use useragent and proxy to get product data')
         
     except Exception as ex:
         isResponseValid = False
-        print(f'got issue when requesting with proxy: {ex}')
+        print(f'collect_product, got issue when requesting with proxy: {ex}')
         pass
 
     if isResponseValid == False:
         try:
             response = requests.get(url, headers={'user-agent': user_agent}, timeout=5)
-            print(f'use useragent only to get product data')
+            print(f'collect_product, use useragent only to get product data')
 
             isResponseValid=False
         except Exception as ex: 
-            print(f'got issue when requesting: {ex}')
+            print(f'collect_product, got issue when requesting: {ex}')
             pass
         
     products = []
 
     if response is None:
+        print(f'collect_product, response is not valid, should check requests logic and params')
         return products
 
+    
     soup = BeautifulSoup(response.content, 'html5lib')
-
+    # print(soup)
     items = soup.findAll('div', attrs={'class': "product-item-meta"})
 
+    if len(items)==0:
+        print('collect_product, can\'t find any products, might be blocked by reCAPTCHA or url is not valid')
+    
+    # print("retrieved content:\n")
+    # print(items)
+
     for item in items:
-        # print(item.prettify())
+       # print("retrieved content item:\n")
+       # print(item.prettify())
         product_meta = {}
         try:
             product_meta["code"] = item['id']

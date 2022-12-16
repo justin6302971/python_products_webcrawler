@@ -125,7 +125,7 @@ def check_latest_products():
 #         HERMES_BAGS_AND_SMALL_LEATHER_GOODS_URL)
 #     print(latest_product_info_list)
 
-# schedule.every(10).seconds.do(test)
+# test()
 
 
 

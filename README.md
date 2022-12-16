@@ -41,3 +41,4 @@ pip install -r requirements.txt
 4. [python datetime](https://www.freecodecamp.org/news/python-datetime-now-how-to-get-todays-date-and-time/)
 5. [schedule python scripts method](https://nschdr.medium.com/running-scheduled-python-tasks-in-a-docker-container-bf9ea2e8a66c)
 6. [proxynova](https://www.proxynova.com/proxy-server-list/country-tw/)
+7. [check ip](https://httpbin.org/ip)
